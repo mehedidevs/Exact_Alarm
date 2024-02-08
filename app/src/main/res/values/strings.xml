@@ -8,5 +8,9 @@
     <string name="alarm_toast_message">YES SET EXACT ALARM</string>
     <string name="alarm_intent_action">from alarm</string>
     <string name="android_12_logo">android 12 logo</string>
+    <string name="reminders_notification_channel_id">reminders_notification_channel_id</string>
+    <string name="title_notification_reminder">title_notification_reminder</string>
+    <string name="description_notification_reminder">description_notification_reminder</string>
+    <string name="reminders_notification_channel_name">reminders_notification_channel_name</string>
 
 </resources>

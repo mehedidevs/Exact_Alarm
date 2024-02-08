@@ -1,8 +1,7 @@
-package com.mehedi.beeda_alarm
+package com.mehedi.beeda_alarm.v1
 
 import android.app.AlarmManager
 import android.app.AlertDialog
-import android.app.KeyguardManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -13,17 +12,17 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.mehedi.beeda_alarm.R
 import com.mehedi.beeda_alarm.v1.AlarmReceiver_v1
 import com.mehedi.beeda_alarm.v2.RemindersManager
 import java.util.Calendar
 
-class MainActivity : AppCompatActivity() {
+class MainActivity1 : AppCompatActivity() {
 
     private lateinit var timePicker: TimePicker
     private lateinit var setAlarmButton: Button
@@ -34,27 +33,33 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            setShowWhenLocked(true)
-            setTurnScreenOn(true)
-            val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-            keyguardManager.requestDismissKeyguard(this, null)
-        } else {
-            this.window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
-                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-                    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON)
-        }
-
-
         setContentView(R.layout.activity_main)
 
+        createNotificationsChannels()
 
+
+
+//        alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//
         timePicker = findViewById(R.id.timePicker)
         setAlarmButton = findViewById(R.id.setAlarmButton)
         textView = findViewById(R.id.textView)
 
         setAlarmButton.setOnClickListener {
             setAlarm()
+        }
+    }
+
+    private fun createNotificationsChannels() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                getString(R.string.reminders_notification_channel_id),
+                getString(R.string.reminders_notification_channel_name),
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            ContextCompat.getSystemService(this, NotificationManager::class.java)
+                ?.createNotificationChannel(channel)
         }
 
     }
@@ -74,21 +79,50 @@ class MainActivity : AppCompatActivity() {
         calendar.set(Calendar.MINUTE, minute)
         calendar.set(Calendar.SECOND, 0)
 
-        SharedPrefUtil(this).setAlarmTime(calendar.timeInMillis)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // check and set alarms
+            val alarmManager: AlarmManager =
+                getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            when {
+                alarmManager.canScheduleExactAlarms() -> {
+                    // Use to showcase the UX improvements in Android12
+                    Toast.makeText(this, getString(R.string.alarm_toast_message), Toast.LENGTH_LONG)
+                        .show()
+                    val alarmIntent =
+                        Intent(applicationContext, AlarmReceiver_v1::class.java).let {
+                            it.apply { action = getString(R.string.alarm_intent_action) }
+                            PendingIntent.getBroadcast(
+                                applicationContext,
+                                0,
+                                it,
+                                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                            )
+                        }
+                    alarmManager.setExact(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.timeInMillis,
+                        alarmIntent
+                    )
+                }
 
-        RemindersManager.startReminder(this)
-    }
-
-    private fun showWhenLockedAndTurnScreenOn() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            setShowWhenLocked(true)
-            setTurnScreenOn(true)
-        } else {
-            window.addFlags(
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                        or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-            )
+                else -> {
+                    // go to exact alarm settings
+                    Intent().apply {
+                        action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+                    }.also {
+                        startActivity(it)
+                    }
+                }
+            }
         }
+
+
+//        val intent = Intent(this, AlarmReceiver::class.java)
+//        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_MUTABLE)
+//
+//        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+//
+//        textView.text = "Alarm set for $hour:$minute"
     }
 
 

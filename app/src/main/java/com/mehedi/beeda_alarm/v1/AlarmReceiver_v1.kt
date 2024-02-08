@@ -1,4 +1,4 @@
-package com.mehedi.beeda_alarm
+package com.mehedi.beeda_alarm.v1
 
 import android.R
 import android.app.AlarmManager
@@ -14,8 +14,9 @@ import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.Build
 import android.widget.Toast
+import com.mehedi.beeda_alarm.MainActivity
 
-class AlarmReceiver : BroadcastReceiver() {
+class AlarmReceiver_v1 : BroadcastReceiver() {
     private var mediaPlayer: MediaPlayer? = null
     override fun onReceive(context: Context?, intent: Intent?) {
         Toast.makeText(context, "Alarm! Time to wake up!", Toast.LENGTH_LONG).show()
