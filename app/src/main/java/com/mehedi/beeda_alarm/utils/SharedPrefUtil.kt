@@ -1,4 +1,4 @@
-package com.mehedi.beeda_alarm
+package com.mehedi.beeda_alarm.utils
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -14,7 +14,7 @@ import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.Build
 import android.widget.Toast
-import com.mehedi.beeda_alarm.MainActivity
+import com.mehedi.beeda_alarm.ui.MainActivity
 
 class AlarmReceiver_v1 : BroadcastReceiver() {
     private var mediaPlayer: MediaPlayer? = null

@@ -8,8 +8,9 @@ import android.graphics.Color
 import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
+import dagger.hilt.android.HiltAndroidApp
 
-
+@HiltAndroidApp
 class MyApp : Application() {
 
     override fun onCreate() {
