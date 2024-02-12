@@ -13,4 +13,24 @@
     <string name="description_notification_reminder">description_notification_reminder</string>
     <string name="reminders_notification_channel_name">reminders_notification_channel_name</string>
 
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="rationale_notification">This app needs access to your POST NOTIFICATIONS so you can take pictures.</string>
+    <string name="rationale_alarm">This app needs access to your SCHEDULE_EXACT_ALARM to notify you with exact time .</string>
+    <string name="rationale_sms">This app needs access to your sms to read all your great messages.</string>
+    <string name="rationale_contact">This app needs access to your contact to know you better</string>
+    <string name="returned_from_app_settings_to_activity">
+        Returned from app settings to MainActivity with the following permissions:
+        \n\nCamera: %s
+        \nLocation: %s
+        \nSMS: %s
+        \nContacts: %s
+    </string>
+    <string name="camera">Camera</string>
+    <string name="location">Location</string>
+    <string name="sms">SMS</string>
+    <string name="contacts">Contacts</string>
+
 </resources>
