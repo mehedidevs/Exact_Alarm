@@ -65,4 +65,4 @@ fun NotificationManager.sendReminderNotification(
     notify(NOTIFICATION_ID, builder.build())
 }
 
-const val NOTIFICATION_ID = 1
+var NOTIFICATION_ID = System.currentTimeMillis().toInt()

@@ -4,12 +4,39 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import androidx.room.Room
+import com.mehedi.beeda_alarm.db.AlarmDao
+import com.mehedi.beeda_alarm.db.AlarmData
+import com.mehedi.beeda_alarm.db.AlarmDatabase
 import com.mehedi.beeda_alarm.utils.SharedPrefUtil
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 
 object RemindersManager {
-    private const val REMINDER_NOTIFICATION_REQUEST_CODE = 123
 
+
+    fun startAllReminder(alarms: List<AlarmData>, context: Context) {
+
+
+        alarms.forEach { alarmData ->
+            if (alarmData.active) {
+                startReminder(
+                    context,
+                    alarmData.alarmId,
+                    alarmData.alarmTimeMillis
+                )
+
+            } else {
+                stopReminder(context, alarmData.alarmId)
+            }
+        }
+
+
+    }
 
 
     fun startReminder(
@@ -17,9 +44,8 @@ object RemindersManager {
         reminderId: Int,
         alarmTimeMillis: Long
     ) {
-      //  val alarmTimeMillis: Long = SharedPrefUtil(context).getAlarmTime()
+        //  val alarmTimeMillis: Long = SharedPrefUtil(context).getAlarmTime()
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
 
 
         val intent =

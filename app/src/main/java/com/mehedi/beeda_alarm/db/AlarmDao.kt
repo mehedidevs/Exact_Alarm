@@ -13,9 +13,9 @@ interface AlarmDao {
 
     @Update
     suspend fun updateAlarm(alarmData: AlarmData)
-    @Query("SELECT * FROM AlarmData")
-    suspend fun getAllAlarm(): List<AlarmData>
 
+    @Query("SELECT * FROM AlarmData WHERE alarmTimeMillis >= :time")
+    suspend fun getAllAlarm(time: Long = System.currentTimeMillis()): List<AlarmData>
 
 
 }

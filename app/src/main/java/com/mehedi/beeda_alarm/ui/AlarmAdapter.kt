@@ -39,7 +39,7 @@ class AlarmAdapter(
                     }
                 } else {
                     RemindersManager.stopReminder(binding.root.context, alarmData.alarmId)
-                    switchAlarm.isChecked = false
+
                 }
 
                 txtAlarmTime.text = alarmData.alarmDateTime
